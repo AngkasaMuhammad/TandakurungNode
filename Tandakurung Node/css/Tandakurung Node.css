@@ -1,0 +1,17 @@
+html{
+	overflow:hidden;
+}
+body{
+	background-color:#007700;
+	color:white;
+	font-family:Consolas;
+}
+canvas{
+	background-color:#000099aa;
+    z-index: -1;
+	position:absolute;
+	left:0px;
+	top:0px;
+	height:100%;
+	/*image-rendering: pixelated;*/
+}
