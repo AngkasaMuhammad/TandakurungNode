@@ -7,11 +7,94 @@ body{
 	font-family:Consolas;
 }
 canvas{
-	background-color:#000099aa;
+	background-color:#002222;
     z-index: -1;
 	position:absolute;
 	left:0px;
 	top:0px;
 	height:100%;
 	/*image-rendering: pixelated;*/
+}
+input,button,textarea,.output{
+	background:#00000088;
+	color:yellow;
+	font-family:Consolas;
+	tab-size:4;
+}
+textarea{
+	color:#00ff00;
+}
+
+.UI{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:100%;
+	height:100%;
+	
+	display:flex;
+	flex-direction: column;
+}
+.atas{
+	display:flex;
+}
+
+.judul,
+.awal,
+.akhir,
+.Soutpu,
+.Sexport{
+	width:0px;
+}
+.judul{
+	flex:4;
+}
+.awal,
+.akhir,
+.data,
+.output{
+	flex:2;
+}
+.Sexport,
+.kembali{
+	flex:1;
+}
+
+.data,
+.output{
+	resize: none;
+	white-space:nowrap;
+}
+.output{
+	white-space: pre;
+	overflow: auto;
+	color:cyan;
+	font-size:12px;
+}
+.buka{
+	display:none;
+}
+
+.UItutupdata{
+	height:initial;
+}
+.UItutupdata .data{
+	display:none;
+}
+
+.hlmawal{
+	height:initial;
+}
+
+.hlmawal .kembali,
+.hlmawal .data,
+.hlmawal .output,
+.hlmawal .Sexport,
+
+.hlmdata .output,
+.hlmdata .Sexport,
+
+.hlmexport .data
+{
+	display:none;
 }
