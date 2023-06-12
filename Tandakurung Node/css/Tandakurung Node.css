@@ -15,7 +15,11 @@ canvas{
 	height:100%;
 	/*image-rendering: pixelated;*/
 }
-input,button,textarea,.output{
+input,
+button,
+textarea,
+.output,
+.gallery{
 	background:#00000088;
 	color:yellow;
 	font-family:Consolas;
@@ -42,59 +46,132 @@ textarea{
 .judul,
 .awal,
 .akhir,
+.warna,
 .Soutpu,
-.Sexport{
+.Sexport,
+.namaexport,
+.tambahgambar{
 	width:0px;
 }
+.namaexport,
 .judul{
-	flex:4;
+	flex:8;
 }
 .awal,
 .akhir,
+.warna,
 .data,
-.output{
-	flex:2;
+.output,
+.gallery{
+	flex:4;
 }
 .Sexport,
 .kembali{
-	flex:1;
+	flex:2;
 }
-
+.tambahgambar,
+.hapusgambar{
+	flex:.5;
+}
 .data,
-.output{
+.output,
+.gallery{
 	resize: none;
 	white-space:nowrap;
 }
-.output{
-	white-space: pre;
+.output,
+.gallery{
 	overflow: auto;
 	color:cyan;
 	font-size:12px;
 }
-.buka{
-	display:none;
+.output{
+	white-space: pre;
 }
 
 .UItutupdata{
 	height:initial;
-}
-.UItutupdata .data{
-	display:none;
 }
 
 .hlmawal{
 	height:initial;
 }
 
-.hlmawal .kembali,
-.hlmawal .data,
-.hlmawal .output,
-.hlmawal .Sexport,
-
-.hlmdata .output,
-.hlmdata .Sexport,
-
-.hlmexport .data
+.buka,
+.bukaimg
 {
 	display:none;
+}
+
+table, td{
+	border:3px solid white;
+	border-collapse:collapse;
+}
+.rak img{
+	height:111px;
+}
+.namagambar{
+	padding:11px;
+}
+
+.judul,
+.awal,
+.akhir,
+.warna,
+.Sexport,
+.namaexport,
+.tambahgambar,
+.hapusgambar,
+.kembali,
+.data,
+.output,
+.gallery
+{
+	display:none;
+}
+
+.hlmawal .judul,
+.hlmawal .awal,
+.hlmawal .akhir,
+.hlmawal .warna,
+
+.hlmdata .judul,
+.hlmdata .awal,
+.hlmdata .akhir,
+.hlmdata .warna,
+.hlmdata .data,
+.hlmdata .kembali,
+
+.hlmexport .output,
+.hlmexport .Sexport,
+.hlmexport .namaexport,
+.hlmexport .kembali,
+
+.hlmgallery .judul,
+.hlmgallery .awal,
+.hlmgallery .akhir,
+.hlmgallery .warna,
+.hlmgallery .gallery,
+.hlmgallery .tambahgambar,
+.hlmgallery .hapusgambar,
+.hlmgallery .kembali
+{
+	display:initial;
+}
+.rak tr:hover:not(.gambardipilih){
+	background:#ffffff33;
+}
+.gambardipilih{
+	background:#00ff0066;
+	color:white;
+}
+img{
+	image-rendering: pixelated;
+}
+.nodeutamahover{
+	background:#334433aa;
+}
+.outputdivhover{
+	background:#005555aa;
+	/*color:white;*/
 }

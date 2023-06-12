@@ -11,19 +11,23 @@ let ed = editor
 bug:
 1.	saat 
 		mouse bergerak &
-		g turun
+		m turun
 	maka
 		kamera teleport
 	
 rencana:
-1.	tombol saat tekan, paak node dipilih
-2.	bikin upload gambar ke node
+1.	bikin color picker, warnai node & div output
+2.	saat ada key sedang ditekan, key lain jangan aktif
 `	)
 	let canv = ed.canv = document.createElement('canvas')
 	document.body.appendChild(canv)
 	let edp = ed.panjang = canv.width = 1000*1.3
 	let edt = ed.tinggi = canv.height = 600*1.3
 	let cx = ed.cx = canv.getContext('2d',{willReadFrequently:true,},)
+	cx.msImageSmoothingEnabled = false;
+	cx.mozImageSmoothingEnabled = false;
+	cx.webkitImageSmoothingEnabled = false;
+	cx.imageSmoothingEnabled = false;
 	cx.imageSmoothingEnabled = false
 	
 	let namaunik = 0
@@ -177,7 +181,12 @@ rencana:
 		let mousex = ((mx = e.x)/canv.clientWidth-.5)*canv.width
 		let mousey = ((my = e.y)/canv.clientHeight-.5)*canv.height
 		m2d.translate(matmouse,matide,[mousex,mousey,],)
-		
+		warnahover = ru.rgba(
+			Math.random()*255	,
+			Math.random()*255	,
+			Math.random()*255	,
+			.3
+		)
 	}
 	canv.addEventListener('mousemove',mousemoveeve,)
 	canv.addEventListener('mousedown',e=>{
@@ -220,29 +229,55 @@ rencana:
 	},)
 	addEventListener('wheel',e=>{
 		if(texfokuskah()){return}
-		let m = matcam
-		m2d.scale(m,m,[
-			2**(e.deltaY/1111),
-			2**(e.deltaY/1111),
-		],)
+		if(pejet.z){
+			if(nodedipilih?.gambar){
+				let img = nodedipilih.gambar.tr.firstChild.firstChild
+				let diag = (//diagonal
+					img.naturalWidth**2+
+					img.naturalHeight**2
+				)**.5
+				nodedipilih.gamsize = (
+					nodedipilih.gamsize*diag+
+					e.deltaY*matcam[0]*.3
+				)/diag
+			}
+		}else{
+			let m = matcam
+			m2d.scale(m,m,[
+				2**(e.deltaY/1111),
+				2**(e.deltaY/1111),
+			],)
+		}
 	})
 	m2d.scale(matcam,matcam,[3,3,],)
 	let namakey = {
-		[67]:'c'	,
-		[68]:'d'	,
-		[71]:'g'	,
-		[78]:'n'	,
-		[80]:'p'	,
-		[83]:'s'	,
-		[46]:'delete'	,
+		[27]:'esc'	,//esc
+		[49]:'1'	,//1
+		[50]:'2'	,//2
+		[51]:'3'	,//3
+		[52]:'4'	,//4
+		[66]:'b'	,//before
+		[67]:'c'	,//copy
+		[68]:'d'	,//display
+		[77]:'m'	,//move
+		[78]:'n'	,//new
+		[80]:'p'	,//parent
+		[83]:'s'	,//swap
+		[90]:'z'	,//zoom
+		[46]:'delete'	,//delete
 	}
 	let pejet = {}
 	let pejeve = e=>{
-		//lih(e.keyCode)
+		//lih('e.keyCode = '+e.keyCode)
 		let nk = namakey[e.keyCode]
 		if(!nk){return}
 		let kd = e.type === 'keydown'
 		let dipejet = pejet[nk] = (!!pejet[nk] === kd)?!!pejet[nk]:+kd
+		//
+		if((nk === 'esc') && dipejet){
+			cla('kembali')[0].click()
+		}
+		//lain
 		if(dipejet && texfokuskah()){return}
 		let m
 		let hov0ini = (hov0 === true)?grid:hov0
@@ -265,7 +300,10 @@ rencana:
 		}
 		//ok,lanjut
 		switch(nk){
-			case 'g':
+			case '1':if(dipejet === 1){tom_img	.feve('klik',)}break
+			case '2':if(dipejet === 1){tom_edit	.feve('klik',)}break
+			case '3':if(dipejet === 1){tom_export	.feve('klik',)}break
+			case 'm':
 				if(dipejet === 1){
 					canv.requestPointerLock()
 				}else if(!dipejet){
@@ -419,6 +457,10 @@ rencana:
 							nodebaru.data	= arr_asli[naA].data
 							nodebaru.awal	= arr_asli[naA].awal
 							nodebaru.akhir	= arr_asli[naA].akhir
+							nodebaru.warna	= arr_asli[naA].warna
+							nodebaru.gambar	= arr_asli[naA].gambar
+							nodebaru.gamsize	= arr_asli[naA].gamsize
+							nodebaru.show	= arr_asli[naA].show
 							if(naA){
 								m2d.copy(nodebaru.matlok,arr_asli[naA].matlok,)
 							}
@@ -446,6 +488,7 @@ rencana:
 			case 'd':
 				if(
 					(dipejet === 1) &&
+					nodedipilih &&
 					(nodedipilih !== grid)
 				){
 					let c = nodedipilih.children
@@ -456,11 +499,55 @@ rencana:
 					}
 				}
 			break
+			case 'b':
+				if(dipejet === 1){
+					tahB = nodedipilih
+				}else if(
+					!dipejet &&
+					tahB
+				){//lepas
+					if(
+						(tahB !== grid) &&//bukan dari grid
+						!oini
+					){
+						//hov0ini
+						let h0ipar = hov0ini?.parent.parent
+						if(!h0ipar){break}
+						let o = h0ipar
+						//let bubar = 111
+						while(o){
+							//if(--bubar <= 0){throw 'keBABLASen'}
+							
+							if(o === tahB){
+								o = 'keluar'
+								break
+							}
+							o = o.parent.parent
+						}
+						//lanjut
+						if(o !== 'keluar'){
+							let chi = tahB.parent.children
+							let mtah = tahB.matlok
+							let mhov = h0ipar.group.matglo
+							m2d.invert(mtah,mhov,)
+							m2d.mul(mtah,mtah,matmouse,)
+							m2d.translate(mtah,matide,[mtah[4],mtah[5],],)
+							
+							chi.splice(chi.indexOf(tahB),1,)
+							//h0ipar.group.children.push(tahB)
+							let c = h0ipar.group.children
+							c.splice(c.indexOf(hov0ini),0,tahB,)
+						}
+					}
+					tahB = null
+				}
+			break
 		}
 	}
 	let tahS = null//tukar
 	let tahP = null//masuk ke parent
 	let tahC = null//salin
+	let tahB = null//sebelum sibling
 	addEventListener('keydown',pejeve,)
 	addEventListener('keyup',pejeve,)
 	let bikinnode = parnode=>{
@@ -481,7 +568,11 @@ rencana:
 		node.judul = 'judul '+node.nama
 		node.awal = 
 		node.akhir = ''
+		node.warna = 'grey'
 		node.data = ''
+		node.gambar = null//[tr,Uint8ClampedArray,]
+		node.gamsize = 1//skala gambar
+		node.id = namaunik
 		
 		namaunik++
 		return node
@@ -592,15 +683,23 @@ rencana:
 					if(hov0 === o){
 						let x = 0
 						let y = -30
-						cx.fillText('Mouse tekan = pilih node'	,x	,(y++)*22	,)//sampe sini, semua harus dari node dipilih
+						cx.fillText('Mouse tekan = pilih node'	,x	,(y++)*22	,)
 						cx.fillText('Mouse wheel = zoom world'	,x	,(y++)*22	,)
-						cx.fillText('Tahan G = gerakan world'	,x	,(y++)*22	,)
+						cx.fillText('Tahan M = gerakan world'	,x	,(y++)*22	,)
 						cx.fillText('Tekan P = node terpilih masuk ke node menjadi child'	,x	,(y++)*22	,)
+						cx.fillText('Tekan B = node terpilih pindah ke sebelum node'	,x	,(y++)*22	,)
 						cx.fillText('Tekan S = pilih node untuk ditukar'	,x	,(y++)*22	,)
 						cx.fillText('tekan C = salin node'	,x	,(y++)*22	,)
 						cx.fillText('Tekan N = child baru'	,x	,(y++)*22	,)
 						cx.fillText('Tekan D = tampil/sembunyi children'	,x	,(y++)*22	,)
+						cx.fillText('Tekan Z & mouse wheel = zoom gambar dalam node'	,x	,(y++)*22	,)
 						cx.fillText('Tekan Delete = hapus node'	,x	,(y++)*22	,)
+						cx.fillText('Tekan 1 = buka gallery'	,x	,(y++)*22	,)
+						cx.fillText('Tekan 2 = edit node '	,x	,(y++)*22	,)
+						cx.fillText('Tekan 3 = export '	,x	,(y++)*22	,)
+						cx.fillText('Tekan esc = kembali'	,x	,(y++)*22	,)
+						y++
+						cx.fillText('(petunjuk blum lengkap)'	,x	,(y++)*22	,)
 					}
 				break
 			}
@@ -629,7 +728,32 @@ rencana:
 				break
 				case 'klik':
 					let arr = [grid]
-					let h = [{children:[]}]
+					let gambar = []
+					for(let vaA of arr_gambar){
+						let data = ''//data berupa string
+						for(let vaB of vaA.rgba){
+							//https://stackoverflow.com/questions/17204335/convert-decimal-to-hex-missing-padded-0
+							//=================
+							let s = (+vaB).toString(16)
+							if(s.length < 2){
+								s = '0'+s
+							}
+							//-----------------
+							data += s
+						}
+						let eleimg = vaA.tr.firstChild.firstChild
+						gambar.push({
+							nama	:vaA.tr.lastChild.textContent	,
+							w	:eleimg.width	,
+							h	:eleimg.height	,
+							data	:data	,
+						})
+					}
+					let h = [{
+						namaexport	:cla('namaexport')[0].value	,//sampe sini, bikin input namaexport di hlmexport, nama file export
+						gambar	:gambar	,
+						children	:[]	,
+					}]
 					for(let naA = 0;naA < arr.length;naA++){
 						let vaA = arr[naA]
 						let c = vaA.group.children
@@ -643,12 +767,16 @@ rencana:
 								judul	:vaB.judul	,
 								awal	:vaB.awal	,
 								akhir	:vaB.akhir	,
+								warna	:vaB.warna	,
 								data	:vaB.data	,
 								x	:vaB.matlok[4]	,
 								y	:vaB.matlok[5]	,
+								gambar	:arr_gambar.indexOf(vaB.gambar)	,//index dalam arr_gambar
+								gamsize	:vaB.gamsize	,
 								show	:!!vaB.children.length	,
 								children	:[]	,
 							}
+							
 							h.splice(naA+naB+1,0,o,)
 							h[naA].children.push(o)
 						}
@@ -748,9 +876,12 @@ rencana:
 					cla('UI')[0].classList.remove('hlmawal')
 					cla('UI')[0].classList.remove('hlmdata')
 					cla('UI')[0].classList.add('hlmexport')
+					cla('UI')[0].classList.remove('hlmgallery')
 					
 					let arr = [grid.group.children]
 					let h0 = [[]]
+					let arr_div = [output]//div
+					output.textContent = ''
 					
 					for(let naA = 0;naA<arr.length;naA++){
 						let vaA = arr[naA]
@@ -758,7 +889,9 @@ rencana:
 						for(let naB in c){
 							naB = +naB
 							let vaB = c[naB]
+							//arr
 							arr.splice(naA+naB+1,0,vaB.group.children,)
+							//h0
 							let isi = {
 								data	:vaB.data	,
 								awal	:vaB.awal	,
@@ -766,8 +899,36 @@ rencana:
 								akhir	:vaB.akhir	,
 								tab	:''	,
 							}
-							h0.splice(naA+naB+1,0,isi.nodes,)
 							h0[naA].push(isi)
+							h0.splice(naA+naB+1,0,isi.nodes,)
+							//div
+							let div = document.createElement('div')
+							arr_div[naA].appendChild(div)
+							div.classList.add('nodeutama')//Export Output
+							div.setAttribute('nodeid',vaB.id,)
+							div.style.color = vaB.warna
+							let divdata	= document.createElement('div')
+							let divawal	= document.createElement('div')
+							let divnodes	= document.createElement('div')
+							let divakhir	= document.createElement('div')
+							divdata	.classList.add('EOdata')
+							divawal	.classList.add('EOawal')
+							divnodes	.classList.add('EOchildren')
+							divakhir	.classList.add('EOakhir')
+							divdata	.textContent = vaB.data
+							divawal	.textContent = vaB.awal
+							//divnodes	.textContent
+							divakhir	.textContent = vaB.akhir
+							div.appendChild(divdata)
+							div.appendChild(divawal)
+							div.appendChild(divnodes)
+							div.appendChild(divakhir)
+							arr_div.splice(naA+naB+1,0,divnodes,)
+							//lainlain
+							isi.divdata	= divdata
+							isi.divawal	= divawal
+							//isi.divnodes	= divnodes
+							isi.divakhir	= divakhir
 						}
 					}
 					
@@ -779,21 +940,31 @@ rencana:
 						if(!(vaA instanceof Array)){continue}
 						h1.splice(naA,1,)
 						for(let naB in vaA){
-							let vaB = vaA[naB]
+							let vaB = vaA[naB]//{}
+							let texdata = vaB.data.length?tambahtab(vaB.tab,vaB.data,):''
+							let texawal = vaB.awal.length?(vaB.tab+vaB.awal):''
+							let texakhir = vaB.akhir.length?(vaB.tab+vaB.akhir):''
 							h1.splice(naA+naB*4,0,
-								tambahtab(vaB.tab,vaB.data,)	,
-								vaB.tab+vaB.awal	,
+								texdata	,
+								texawal	,
 								vaB.nodes	,
-								vaB.tab+vaB.akhir	,
+								texakhir	,
 							)
 							for(let vaC of vaB.nodes){
 								vaC.tab = vaB.tab+'\t'
 							}
+							//
+							vaB.divdata	.textContent = texdata
+							vaB.divawal	.textContent = texawal
+							vaB.divakhir	.textContent = texakhir
 						}
+						
 						naA--
 					}
+					lih(h1)
+					hasilexport = h1.filter(aa=>aa.length).join('\n')
+					lih(hasilexport)
 					
-					hasilexport = cla('output')[0].textContent = h1.join('\n')
 				break
 			}
 		},
@@ -844,7 +1015,8 @@ rencana:
 					cla('UI')[0].classList.remove('hlmawal')
 					cla('UI')[0].classList.add('hlmdata')
 					cla('UI')[0].classList.remove('hlmexport')
-					cla('data')[0].focus()
+					cla('UI')[0].classList.remove('hlmgallery')
+					//cla('data')[0].focus()
 				break
 			}
 		},
@@ -884,6 +1056,56 @@ rencana:
 		p.lineTo(7-2	,-7+6	,)
 	p = null
 	
+	let tom_img = bikinobj('tom_img',
+		(e,o,dt,)=>{
+			let m
+			switch(e){
+				case 'tampil':
+					ftom(e,o,dt,'',)
+					cx.lineWidth = 1
+					cx.stroke(o.bentuk)
+				break
+				case 'klik':
+					lih('buka gallery')
+					cla('UI')[0].classList.remove('hlmawal')
+					cla('UI')[0].classList.remove('hlmdata')
+					cla('UI')[0].classList.remove('hlmexport')
+					cla('UI')[0].classList.add('hlmgallery')
+				break
+			}
+		},
+	)
+	tom_img.hoverbox = tom_help.hoverbox
+	tom_img.tex = 'Buka gallery'
+	tom_img.bentuk = new Path2D()
+	m = tom_img.matlok
+		m2d.translate(m,m,[
+			-edp/2+22	,
+			edt/2-22*(1+1.5*5)	,
+		])
+		//lihat bentar
+		/*
+		m2d.translate(m,m,[
+			333	,
+			-333	,
+		])
+		m2d.scale(m,m,[
+			11	,
+			11	,
+		])
+		*/
+	m = null
+	p = tom_img.bentuk
+		p.moveTo(-11	,11	,)
+		p.lineTo(-7+3	,0	,)
+		p.lineTo(-7+6	,7-4	,)
+		p.lineTo(7-3	,-7+3	,)
+		p.lineTo(11	,7	,)
+		//p.closePath()
+		p.moveTo(-7+5,-7+2,)
+		p.ellipse(-7+3,-7+2,2,2,0,0,359.99,)
+	p = null
+	
 	//children, yang atas = muncul di belakang
 	let chi = (par,chi,)=>par.children.push(chi)
 		chi(global,grid,)
@@ -895,6 +1117,7 @@ rencana:
 				chi(menu,tom_buka,)
 				chi(menu,tom_export,)
 				chi(menu,tom_edit,)
+				chi(menu,tom_img,)
 			chi(UI,mouse_pos,)
 			chi(UI,border,)
 	
@@ -902,42 +1125,60 @@ rencana:
 		let m
 		switch(e){
 			case 'hitung0':
+				m2d.copy(o.hoverbox,ukuranhoverbox,)
+				if(arr_gambar.includes(o.gambar)){
+					m = o.hoverbox
+					let gam = o.gambar.tr?.firstChild.firstChild
+					if(gam){
+						m2d.copy(o.hoverbox,matide,)
+						m[4] = gam.naturalWidth/2*o.gamsize
+						m[5] = gam.naturalHeight/2*o.gamsize
+						m2d.scale(m,m,[m[4],m[5],],)
+					}
+				}else{
+					o.gambar = null
+				}
 				m = o.matlok
 				if(tah0 === o){
 					m2d.mul(m,matcam,matmouse,)
 					m2d.translate(m,matide,[m[4]+mxo,m[5]+myo,],)
 				}
-				if(o.children.length){
-					m2d.copy(o.hoverbox,ukuranhoverbox,)
-					if(o.parent.parent !== grid){
-						m[4] = Math.max(22,m[4],)
-						m[5] = Math.max(22,m[5],)
-					}
+				if(o.parent.parent !== grid){
+					m[4] = Math.max(22,m[4],)
+					m[5] = Math.max(22,m[5],)
 				}
 				fukurhoverbox(o)
 				
 			break
 			case 'tampil':
+			/*
 				//(>1 tahan) bersamaan
 				if(tahP && tahS){
-					cx.fillStyle = 'black'
+					cx.fillStyle = '#00000099'
 				}else
+				*/
 				//tahP
-				if(tahP === o){
-					cx.fillStyle = 'blue'
+				if(
+					(tahP === o) ||
+					(tahB === o)
+				){
+					cx.fillStyle = '#0000ff99'
 				}else if(
-					tahP &&
+					(tahP || tahB) &&
 					(hov0 === o)
 				){
-					cx.fillStyle = '#00ff00'
+					cx.fillStyle = '#00ff0099'
 					//hov0ini
 					let oini = hov0
 					//let bubar = 111
 					while(oini){
 						//if(--bubar <= 0){throw 'keBABLASen'}
 						
-						if(oini === tahP){
-							cx.fillStyle = 'red'
+						if(
+							(oini === tahP) ||
+							(oini === tahB)
+						){
+							cx.fillStyle = '#ff000099'
 							break
 						}
 						oini = oini.parent.parent
@@ -945,12 +1186,12 @@ rencana:
 				}else 
 				//tahS
 				if(tahS === o){
-					cx.fillStyle = 'blue'
+					cx.fillStyle = '#0000ff99'
 				}else if(
 					tahS &&
 					(hov0 === o)
 				){
-					cx.fillStyle = '#00ff00'
+					cx.fillStyle = '#00ff0099'
 					//tahS
 					let oini = tahS
 					//let bubar = 111
@@ -958,7 +1199,7 @@ rencana:
 						//if(--bubar <= 0){throw 'keBABLASen'}
 						
 						if(oini === hov0){
-							cx.fillStyle = 'red'
+							cx.fillStyle = '#ff000099'
 							break
 						}
 						oini = oini.parent.parent
@@ -970,7 +1211,7 @@ rencana:
 						//if(--bubar <= 0){throw 'keBABLASen'}
 						
 						if(oini === tahS){
-							cx.fillStyle = 'red'
+							cx.fillStyle = '#ff000099'
 							break
 						}
 						oini = oini.parent.parent
@@ -979,36 +1220,44 @@ rencana:
 				}else
 				//tahC
 				if(tahS === o){
-					cx.fillStyle = 'blue'
+					cx.fillStyle = '#0000ff99'
 				}else if(
 					tahC &&
 					(hov0 === o)
 				){
-					cx.fillStyle = '#00ff00'
+					cx.fillStyle = '#00ff0099'
 				}else
 				//lain
 				if(hov0 === o){
-					cx.fillStyle = '#444444'
+					cx.fillStyle = warnahover//'#00000066'
 				}else{
-					cx.fillStyle = '#222222ee'
+					cx.fillStyle = '#21212133'
 				}
 				
+				if(o.gambar && o.gambar.tr){
+					cx.save()
+						cx.scale(o.gamsize,o.gamsize,)
+						cx.drawImage(o.gambar.tr.firstChild.firstChild,0,0,)
+					cx.restore()
+				}
 				m = o.hoverbox
 				cx.save()
 					cx.transform(...m)
 					cx.fillRect(-1,-1,2,2,)
 				cx.restore()
-				cx.strokeStyle = o.children.length?'cyan':'blue'
 				cx.fillStyle = 'white'
 				cx.font = '77px Consolas'
 				cx.fillStyle = (nodedipilih === o)?'white':'#ffffff77'
 				cx.fillText(o.judul,0,-26,)
-				cx.lineWidth = 6
-				cx.strokeRect(0,0,m[4]*2,m[5]*2,)
-				cx.fillStyle = (nodedipilih === o)?'white':'black'
-				cx.fillRect(-11	,-11	,22	,22	,)
-				cx.fillRect(-11	,m[5]*2-11	,22	,22	,)
-				cx.fillRect(m[4]*2-11	,m[5]*2-11	,22	,22	,)
+				if(o.children.length){
+					cx.lineWidth = 6
+					cx.strokeStyle = o.warna
+					cx.strokeRect(0,0,m[4]*2,m[5]*2,)
+					cx.fillStyle = (nodedipilih === o)?'white':'black'
+					cx.fillRect(-11	,-11	,22	,22	,)
+					cx.fillRect(-11	,m[5]*2-11	,22	,22	,)
+					cx.fillRect(m[4]*2-11	,m[5]*2-11	,22	,22	,)
+				}
 				garishubung(e,o,dt,)
 			break
 			case 'turun':
@@ -1019,11 +1268,8 @@ rencana:
 				m2d.translate(m,matide,[m[4],m[5],],)
 				mxo -= m[4]
 				myo -= m[5]
-				nodedipilih = o
-				cla('judul')[0].value = o.judul
-				cla('awal')[0].value = o.awal
-				cla('akhir')[0].value = o.akhir
-				cla('data')[0].value = o.data
+				//
+				pilihnode(o)
 			break
 		}
 	}
@@ -1094,21 +1340,9 @@ rencana:
 	cla('awal')[0].addEventListener('change',htmltexeve,)
 	cla('akhir')[0].addEventListener('input',htmltexeve,)
 	cla('akhir')[0].addEventListener('change',htmltexeve,)
+	cla('warna')[0].addEventListener('input',htmltexeve,)
+	cla('warna')[0].addEventListener('change',htmltexeve,)
 	
-		/*
-	cla('Sdata')[0].addEventListener('click',e=>{
-		let c = cla('UI')[0].classList
-		if(c.contains('UItutupdata')){
-			c.remove('UItutupdata')
-			e.currentTarget.textContent = 'Tutup'
-			cla('data')[0].focus()
-		}else{
-			c.add('UItutupdata')
-			e.currentTarget.textContent = 'Data'
-		}
-		
-	})
-		*/
 	let ftom = (e,o,dt,tex,)=>{
 		let hb = o.hoverbox
 		cx.fillStyle = '#ffffff33'
@@ -1124,7 +1358,27 @@ rencana:
 	}
 	cla('buka')[0].addEventListener('change',e=>e.currentTarget.files[0].text().then(bukafile),)
 	let bukafile = e=>{
-		let arr = [lih(JSON.parse(e))]
+		let json = lih(JSON.parse(e))
+		
+		cla('namaexport')[0].value = json.namaexport
+		for(let vaA of json.gambar){
+			let ca = document.createElement('canvas')
+			ca.width = vaA.w
+			ca.height = vaA.h
+			let cxini = ca.getContext('2d')
+			for(let y = 0;y < vaA.h;y++){
+				for(let x = 0;x < vaA.w;x++){
+					cxini.fillStyle = '#'+vaA.data.substr((x+y*vaA.w)*8,8,)
+					cxini.fillRect(x,y,1,1,)
+				}
+			}
+			let img = new Image()
+			img.src = ca.toDataURL()
+			let o = bikintrrgba()
+			img.addEventListener('load',e=>muatgambar(e,vaA.nama,o,),)
+		}
+		
+		let arr = [json]
 		let h = [grid]//hasil
 		
 		for(let naA = 0;naA<arr.length;naA++){
@@ -1138,11 +1392,14 @@ rencana:
 				let node = bikinnode(h[naA])
 				
 				h.splice(naA+naB+1,0,node,)
-				node.nama = vaB.nama
+				//node.nama = vaB.nama
+				node.judul = vaB.judul
 				node.awal = vaB.awal
 				node.akhir = vaB.akhir
-				node.judul = vaB.judul
+				node.warna = vaB.warna
 				node.data = vaB.data
+				node.gamsize = vaB.gamsize
+				node.gambar = arr_gambar[vaB.gambar]
 				m2d.translate(node.matlok,matide,[vaB.x,vaB.y,],)
 				if(!vaB.show)
 					node.children.pop()
@@ -1183,16 +1440,150 @@ rencana:
 		cla('UI')[0].classList.add('hlmawal')
 		cla('UI')[0].classList.remove('hlmdata')
 		cla('UI')[0].classList.remove('hlmexport')
+		cla('UI')[0].classList.remove('hlmgallery')
 	})
 	let hasilexport
 	cla('Sexport')[0].addEventListener('click',e=>{
 		simpanfile(
 			hasilexport	,
 			''	,
-			'export'	,
+			cla('namaexport')[0].value	,
 		)
 	})
+	cla('tambahgambar')[0].addEventListener('click',e=>{
+		cla('bukaimg')[0].value = ''
+		cla('bukaimg')[0].click()
+	})
+	cla('bukaimg')[0].addEventListener('change',e=>{
+		let files = e.currentTarget.files
+		for(let vaA of files){//file,blob
+			let img = new Image()
+			img.src = URL.createObjectURL(vaA)
+			let o = bikintrrgba()
+			img.addEventListener('load',e=>muatgambar(e,vaA.name,o,),)
+		}
+	},)
+	let bikintrrgba = ()=>{
+		let o = {
+			tr	:null	,
+			rgba	:null	,//Uint8ClampedArray
+		}
+		arr_gambar.push(o)
+		return o
+	}
+	let muatgambar = (e,nama,o,)=>{
+		let cre = tag=>document.createElement(tag)
+		let rak = cla('rak')[0]
+		let tr
+		let td
+		let tex
+		let button
+		let img = e.currentTarget
+		rak.appendChild(tr = cre('tr'));tr.addEventListener('click',e=>klikgambar(e.currentTarget),)
+			tr.appendChild(td = cre('td'))
+				td.appendChild(img)
+			tr.appendChild(td = cre('td'));td.classList.add('namagambar')
+				td.appendChild(tex = document.createTextNode(nama))
+			
+		o.tr = tr
+		
+		//https://www.quora.com/How-do-I-get-the-image-pixel-in-JavaScript
+		const canvas = document.createElement('canvas'); 
+		const ctx = canvas.getContext('2d'); 
+		
+		canvas.width = img.naturalWidth; 
+		canvas.height = img.naturalHeight; 
+		
+		ctx.drawImage(img, 0, 0); 
+		
+		o.rgba = ctx.getImageData(0, 0, canvas.width, canvas.height).data; 
+	}
+	let gambardipilih = null//<tr>
+	let klikgambar = cur=>{
+		let cl = cur.classList
+		let punya = cl.contains('gambardipilih')
+		for(let vaA of cla('gambardipilih')){
+			vaA.classList.remove('gambardipilih')
+		}
+		gambardipilih = null
+		;(nodedipilih??{}).gambar = null
+		if(!punya){
+			cl.add('gambardipilih')
+			gambardipilih = cur
+			
+			for(let naA in arr_gambar){
+				naA = +naA
+				let vaA = arr_gambar[naA]
+				if(vaA.tr === gambardipilih){
+					;(nodedipilih??{}).gambar = vaA
+					break
+				}
+			}
+		}
+	}
+	cla('hapusgambar')[0].addEventListener('click',e=>{
+		URL.revokeObjectURL(gambardipilih?.firstChild.firstChild.src)
+		gambardipilih?.parentElement.removeChild(gambardipilih)
+		for(let naA in arr_gambar){
+			if(arr_gambar[naA].tr === gambardipilih){
+				arr_gambar.splice(naA,1,)
+				break
+			}
+		}
+		gambardipilih = null
+	})
+	let arr_gambar = []
+	let output = cla('output')[0]
+	output.addEventListener('mousemove',e=>{
+		for(let {classList:vaA} of cla('outputdivhover')){
+			vaA.remove('outputdivhover')
+		}
+		for(let {classList:vaA} of cla('nodeutamahover')){
+			vaA.remove('nodeutamahover')
+		}
+		if(e.target === e.currentTarget){return}
+		let ele = e.target
+		ele.classList.add('outputdivhover')
+		if(!ele.classList.contains('nodeutama')){
+			ele.parentElement.classList.add('nodeutamahover')
+		}
+	},)
+	output.addEventListener('click',e=>{
+		let id = lih(e.target.parentElement.getAttribute('nodeid'))
+		let arr = [grid.group.children]
+		for(let naA = 0;naA < arr.length;naA++){
+			let vaA = arr[naA]//[{},{},{},...,]
+			for(let naB in vaA){
+				naB = +naB
+				let vaB = vaA[naB]
+				if(+vaB.id === +id){
+					pilihnode(vaB)
+					return
+				}
+				arr.splice(naA+naB+1,0,vaB.group.children,)
+			}
+		}
+		lih('ga ketemu ,alias errorr!!!, HARUS ketemu')
+	},)
+	let pilihnode = o=>{
+		nodedipilih = o
+		cla('judul')[0].value = o.judul
+		cla('awal')[0].value = o.awal
+		cla('akhir')[0].value = o.akhir
+		cla('warna')[0].value = o.warna
+		cla('data')[0].value = o.data
+		
+		cla('gambardipilih')[0]?.classList.remove('gambardipilih')
+		o.gambar?.tr.classList.add('gambardipilih')
+	}
+	let warnahover
 	
+	requestAnimationFrame(lukis)
+	
+	//lihat
+	ed.matcam = matcam
+	ed.lihatarr_gambar = arr_gambar
+	ed.lihatgambardipilih = gambardipilih
 	ed.lihatobj = (o,tab = '\t',)=>{
 		o = o || global
 		lih(tab+o.nama)
@@ -1200,7 +1591,5 @@ rencana:
 			ed.lihatobj(vaA,tab+'|\t')
 		}
 	}
-	
-	requestAnimationFrame(lukis)
 }
 editor = null
