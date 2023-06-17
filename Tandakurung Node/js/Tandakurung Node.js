@@ -16,8 +16,7 @@ bug:
 		kamera teleport
 	
 rencana:
-1.	bikin color picker, warnai node & div output
-2.	saat ada key sedang ditekan, key lain jangan aktif
+1.	saat ada key sedang ditekan, key lain jangan aktif
 `	)
 	let canv = ed.canv = document.createElement('canvas')
 	document.body.appendChild(canv)
@@ -312,7 +311,7 @@ rencana:
 			break
 			case 'n':
 				if(dipejet === 1){
-					bikinnode(hov0ini,)
+					pilihnode(bikinnode(hov0ini,))
 				}
 			break
 			case 'p':
@@ -568,7 +567,7 @@ rencana:
 		node.judul = 'judul '+node.nama
 		node.awal = 
 		node.akhir = ''
-		node.warna = 'grey'
+		node.warna = 'white'
 		node.data = ''
 		node.gambar = null//[tr,Uint8ClampedArray,]
 		node.gamsize = 1//skala gambar
@@ -594,7 +593,8 @@ rencana:
 			switch(e){
 				case 'tampil':
 					cx.lineWidth = 4
-					cx.strokeStyle = 'white'
+					cx.strokeStyle = '#445544'
+					cx.beginPath()
 					cx.stroke(o.bentuk)
 					cx.lineWidth = 9
 					cx.strokeStyle = 'red'
@@ -750,7 +750,7 @@ rencana:
 						})
 					}
 					let h = [{
-						namaexport	:cla('namaexport')[0].value	,//sampe sini, bikin input namaexport di hlmexport, nama file export
+						namaexport	:cla('namaexport')[0].value	,
 						gambar	:gambar	,
 						children	:[]	,
 					}]
@@ -1330,7 +1330,10 @@ rencana:
 	
 	let htmltexeve = e=>
 		(nodedipilih??{})[e.currentTarget.id] = e.currentTarget.value
-	
+	let warnaeve = e=>{
+		htmltexeve(e)
+		cla('data')[0].style.color = e.currentTarget.value
+	}
 	
 	cla('judul')[0].addEventListener('input',htmltexeve,)
 	cla('judul')[0].addEventListener('change',htmltexeve,)
@@ -1340,8 +1343,9 @@ rencana:
 	cla('awal')[0].addEventListener('change',htmltexeve,)
 	cla('akhir')[0].addEventListener('input',htmltexeve,)
 	cla('akhir')[0].addEventListener('change',htmltexeve,)
-	cla('warna')[0].addEventListener('input',htmltexeve,)
-	cla('warna')[0].addEventListener('change',htmltexeve,)
+	
+	cla('warna')[0].addEventListener('input',warnaeve,)
+	cla('warna')[0].addEventListener('change',warnaeve,)
 	
 	let ftom = (e,o,dt,tex,)=>{
 		let hb = o.hoverbox
@@ -1570,13 +1574,17 @@ rencana:
 		cla('judul')[0].value = o.judul
 		cla('awal')[0].value = o.awal
 		cla('akhir')[0].value = o.akhir
-		cla('warna')[0].value = o.warna
+		cla('warna')[0].value = cla('data')[0].style.color = o.warna
 		cla('data')[0].value = o.data
 		
 		cla('gambardipilih')[0]?.classList.remove('gambardipilih')
 		o.gambar?.tr.classList.add('gambardipilih')
 	}
 	let warnahover
+	addEventListener('beforeunload',e=>{
+		e.returnValue = 'yyeyy'
+		//return 'kosonggg'
+	},)
 	
 	requestAnimationFrame(lukis)
 	
