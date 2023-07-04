@@ -302,6 +302,7 @@ rencana:
 			case '1':if(dipejet === 1){tom_img	.feve('klik',)}break
 			case '2':if(dipejet === 1){tom_edit	.feve('klik',)}break
 			case '3':if(dipejet === 1){tom_export	.feve('klik',)}break
+			case '4':if(dipejet === 1){tom_save	.feve('klik',)}break
 			case 'm':
 				if(dipejet === 1){
 					canv.requestPointerLock()
@@ -462,6 +463,8 @@ rencana:
 							nodebaru.show	= arr_asli[naA].show
 							if(naA){
 								m2d.copy(nodebaru.matlok,arr_asli[naA].matlok,)
+							}else{
+								pilihnode(nodebaru)
 							}
 						}
 					}
@@ -647,7 +650,7 @@ rencana:
 		switch(e){
 			case 'tampil':
 				cx.fillStyle = '#00ff00'
-				cx.strokeStyle = 'cyan'
+				cx.strokeStyle = '#00ffff44'
 				cx.lineWidth = 3
 				cx.font = '22px Consolas'
 				cx.strokeRect(-edp/2,-edt/2,edp,edt,)
@@ -697,6 +700,7 @@ rencana:
 						cx.fillText('Tekan 1 = buka gallery'	,x	,(y++)*22	,)
 						cx.fillText('Tekan 2 = edit node '	,x	,(y++)*22	,)
 						cx.fillText('Tekan 3 = export '	,x	,(y++)*22	,)
+						cx.fillText('Tekan 4 = simpan project '	,x	,(y++)*22	,)
 						cx.fillText('Tekan esc = kembali'	,x	,(y++)*22	,)
 						y++
 						cx.fillText('(petunjuk blum lengkap)'	,x	,(y++)*22	,)
@@ -727,63 +731,7 @@ rencana:
 					cx.stroke(o.bentuk)
 				break
 				case 'klik':
-					let arr = [grid]
-					let gambar = []
-					for(let vaA of arr_gambar){
-						let data = ''//data berupa string
-						for(let vaB of vaA.rgba){
-							//https://stackoverflow.com/questions/17204335/convert-decimal-to-hex-missing-padded-0
-							//=================
-							let s = (+vaB).toString(16)
-							if(s.length < 2){
-								s = '0'+s
-							}
-							//-----------------
-							data += s
-						}
-						let eleimg = vaA.tr.firstChild.firstChild
-						gambar.push({
-							nama	:vaA.tr.lastChild.textContent	,
-							w	:eleimg.width	,
-							h	:eleimg.height	,
-							data	:data	,
-						})
-					}
-					let h = [{
-						namaexport	:cla('namaexport')[0].value	,
-						gambar	:gambar	,
-						children	:[]	,
-					}]
-					for(let naA = 0;naA < arr.length;naA++){
-						let vaA = arr[naA]
-						let c = vaA.group.children
-						for(let naB in c){
-							naB = +naB
-							let vaB = c[naB]
-							arr.splice(naA+naB+1,0,vaB,)
-							
-							let o = {
-								nama	:vaB.nama	,
-								judul	:vaB.judul	,
-								awal	:vaB.awal	,
-								akhir	:vaB.akhir	,
-								warna	:vaB.warna	,
-								data	:vaB.data	,
-								x	:vaB.matlok[4]	,
-								y	:vaB.matlok[5]	,
-								gambar	:arr_gambar.indexOf(vaB.gambar)	,//index dalam arr_gambar
-								gamsize	:vaB.gamsize	,
-								show	:!!vaB.children.length	,
-								children	:[]	,
-							}
-							
-							h.splice(naA+naB+1,0,o,)
-							h[naA].children.push(o)
-						}
-					}
-					lih(arr)
-					lih(h)
-					simpanfile(JSON.stringify(h[0],null,'\t',),'text/json','proyekku.json',)
+					pindahhlm('hlmsave')
 				break
 			}
 		},
@@ -873,10 +821,7 @@ rencana:
 					cx.stroke(o.bentuk)
 				break
 				case 'klik':
-					cla('UI')[0].classList.remove('hlmawal')
-					cla('UI')[0].classList.remove('hlmdata')
-					cla('UI')[0].classList.add('hlmexport')
-					cla('UI')[0].classList.remove('hlmgallery')
+					pindahhlm('hlmexport')
 					
 					let arr = [grid.group.children]
 					let h0 = [[]]
@@ -1012,10 +957,7 @@ rencana:
 					cx.stroke(o.bentuk)
 				break
 				case 'klik':
-					cla('UI')[0].classList.remove('hlmawal')
-					cla('UI')[0].classList.add('hlmdata')
-					cla('UI')[0].classList.remove('hlmexport')
-					cla('UI')[0].classList.remove('hlmgallery')
+					pindahhlm('hlmdata')
 					//cla('data')[0].focus()
 				break
 			}
@@ -1067,10 +1009,7 @@ rencana:
 				break
 				case 'klik':
 					lih('buka gallery')
-					cla('UI')[0].classList.remove('hlmawal')
-					cla('UI')[0].classList.remove('hlmdata')
-					cla('UI')[0].classList.remove('hlmexport')
-					cla('UI')[0].classList.add('hlmgallery')
+					pindahhlm('hlmgallery')
 				break
 			}
 		},
@@ -1225,6 +1164,7 @@ rencana:
 					tahC &&
 					(hov0 === o)
 				){
+					ru.lihat.a = tahC
 					cx.fillStyle = '#00ff0099'
 				}else
 				//lain
@@ -1365,6 +1305,8 @@ rencana:
 		let json = lih(JSON.parse(e))
 		
 		cla('namaexport')[0].value = json.namaexport
+		cla('namaproject')[0].value = json.namaproject
+		cla('deskripsi')[0].value = json.deskripsi
 		for(let vaA of json.gambar){
 			let ca = document.createElement('canvas')
 			ca.width = vaA.w
@@ -1414,7 +1356,7 @@ rencana:
 		lih(h)
 	}
 	let simpanfile = (data,tipe,nama,)=>{
-		const link = document.createElement("a");
+		const link = lih(document.createElement("a"))
 		const file = new Blob(
 			[data]	,
 			{type: tipe,}	,
@@ -1426,7 +1368,7 @@ rencana:
 	}
 	//let tambahtab = (tabini,data,)=>data.replace(/\n/g,tabini+'\t\t',)
 	let tambahtab = (tabini,data,)=>(tabini+data).replace(/\n/g,'\n'+tabini,)
-	cla('data')[0].addEventListener('keydown', e=>{
+	let tekanTab = e=>{
 		if (e.key == 'Tab') {
 			e.preventDefault();
 			let ini = e.currentTarget
@@ -1439,12 +1381,11 @@ rencana:
 			// put caret at right position again
 			ini.selectionStart = ini.selectionEnd = start + 1;
 		}
-	})
+	}
+	cla('data')[0].addEventListener('keydown',tekanTab,)
+	cla('deskripsi')[0].addEventListener('keydown',tekanTab,)
 	cla('kembali')[0].addEventListener('click',e=>{
-		cla('UI')[0].classList.add('hlmawal')
-		cla('UI')[0].classList.remove('hlmdata')
-		cla('UI')[0].classList.remove('hlmexport')
-		cla('UI')[0].classList.remove('hlmgallery')
+		pindahhlm('hlmawal')
 	})
 	let hasilexport
 	cla('Sexport')[0].addEventListener('click',e=>{
@@ -1467,6 +1408,67 @@ rencana:
 			img.addEventListener('load',e=>muatgambar(e,vaA.name,o,),)
 		}
 	},)
+	cla('simpan')[0].addEventListener('click',e=>{
+		let arr = [grid]
+		let gambar = []
+		for(let vaA of arr_gambar){
+			let data = ''//data berupa string
+			for(let vaB of vaA.rgba){
+				//https://stackoverflow.com/questions/17204335/convert-decimal-to-hex-missing-padded-0
+				//=================
+				let s = (+vaB).toString(16)
+				if(s.length < 2){
+					s = '0'+s
+				}
+				//-----------------
+				data += s
+			}
+			let eleimg = vaA.tr.firstChild.firstChild
+			gambar.push({
+				nama	:vaA.tr.lastChild.textContent	,
+				w	:eleimg.width	,
+				h	:eleimg.height	,
+				data	:data	,
+			})
+		}
+		let h = [{
+			namaexport	:cla('namaexport')[0].value	,
+			namaproject	:cla('namaproject')[0].value	,
+			deskripsi	:cla('deskripsi')[0].value	,
+			gambar	:gambar	,
+			children	:[]	,
+		}]
+		for(let naA = 0;naA < arr.length;naA++){
+			let vaA = arr[naA]
+			let c = vaA.group.children
+			for(let naB in c){
+				naB = +naB
+				let vaB = c[naB]
+				arr.splice(naA+naB+1,0,vaB,)
+				
+				let o = {
+					nama	:vaB.nama	,
+					judul	:vaB.judul	,
+					awal	:vaB.awal	,
+					akhir	:vaB.akhir	,
+					warna	:vaB.warna	,
+					data	:vaB.data	,
+					x	:vaB.matlok[4]	,
+					y	:vaB.matlok[5]	,
+					gambar	:arr_gambar.indexOf(vaB.gambar)	,//index dalam arr_gambar
+					gamsize	:vaB.gamsize	,
+					show	:!!vaB.children.length	,
+					children	:[]	,
+				}
+				
+				h.splice(naA+naB+1,0,o,)
+				h[naA].children.push(o)
+			}
+		}
+		lih(arr)
+		lih(h)
+		simpanfile(JSON.stringify(h[0],null,'\t',),'',cla('namaproject')[0].value,)
+	})
 	let bikintrrgba = ()=>{
 		let o = {
 			tr	:null	,
@@ -1585,6 +1587,14 @@ rencana:
 		e.returnValue = 'yyeyy'
 		//return 'kosonggg'
 	},)
+	let pindahhlm = hlm=>{
+		cla('UI')[0].classList.remove('hlmawal')
+		cla('UI')[0].classList.remove('hlmgallery')
+		cla('UI')[0].classList.remove('hlmdata')
+		cla('UI')[0].classList.remove('hlmexport')
+		cla('UI')[0].classList.remove('hlmsave')
+		cla('UI')[0].classList.add(hlm)
+	}
 	
 	requestAnimationFrame(lukis)
 	
