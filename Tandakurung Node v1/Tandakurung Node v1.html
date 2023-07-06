@@ -1,0 +1,40 @@
+<!--h00000-->
+<!DOCTYPE	html>
+<html>
+	<head>
+		<title>Tandakurung Node v1</title>
+		<link rel="stylesheet" type="text/css" href="css/Tandakurung Node v1.css">
+		<link rel="icon" href="TNicon.png"/>
+	</head>
+	<body>
+		<input class="buka" type="file"/>
+		<input class="bukaimg" type="file" multiple />
+		<div class="UI hlmawal">
+			<div class="atas">
+				<input class="judul" id="judul" placeholder="Judul"/>
+				<!--input class="awal" id="awal" placeholder="Awal"/-->
+				<!--input class="akhir" id="akhir" placeholder="Akhir"/-->
+				<input class="warna" id="warna" placeholder="Warna"/>
+				<input class="namaexport" id="namaexport" placeholder="Nama file export"/>
+				<input class="namaproject" id="namaproject" placeholder="Nama file project"/>
+				<button class="Sexport">Export</button>
+				<button class="simpan">Simpan</button>
+				<button class="tambahgambar">+</button>
+				<button class="hapusgambar">-</button>
+				<button class="kembali">Kembali</button>
+			</div>
+			<textarea class="dataawal" id="dataawal">Harap pilih node untuk mengisi data</textarea>
+			<textarea class="dataakhir" id="dataakhir">Harap pilih node untuk mengisi data</textarea>
+			<textarea class="deskripsi" id="deskripsi">deskripsi</textarea>
+			<div class="output">div output</div>
+			<div class="gallery">
+				<table>
+					<tbody class="rak"></tbody>
+				</table>
+			</div>
+		</div>
+		<script src="../libku/js/gl-matrix.js"></script>
+		<script src="../libku/js/rumus.js"></script>
+		<script src="js/Tandakurung Node v1.js"></script>
+	</body>
+</html>
