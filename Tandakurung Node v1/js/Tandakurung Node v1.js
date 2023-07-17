@@ -14,9 +14,12 @@ bug:
 		m turun
 	maka
 		kamera teleport
-	
+	(skip)
+2.	Kadang, gambar di gallery tidak bisa dihapus
+
 rencana:
-1.	saat ada key sedang ditekan, key lain jangan aktif
+1.	perbaiki gallery
+2.	saat ada key sedang ditekan, key lain jangan aktif (skip)
 `	)
 	let canv = ed.canv = document.createElement('canvas')
 	document.body.appendChild(canv)
@@ -197,6 +200,10 @@ rencana:
 				break
 			}
 		}
+		if(tah0 === true){
+			tidakdipilih()
+			return
+		}
 		for(let vaA of arr_obj){
 			vaA.feve(moueve(vaA),vaA,null,)
 		}
@@ -312,6 +319,10 @@ rencana:
 			break
 			case 'n':
 				if(dipejet === 1){
+					if(!hov0ini.children.length){
+						lih('node tujuan sedang sembunyi tidak bisa new node')
+						break
+					}
 					pilihnode(bikinnode(hov0ini,))
 				}
 			break
@@ -324,7 +335,8 @@ rencana:
 				){//lepas
 					if(
 						(tahP !== grid) &&
-						!oini
+						!oini &&
+						hov0ini.children.length
 					){//bukan dari grid
 						//hov0ini
 						let o = hov0ini
@@ -425,7 +437,7 @@ rencana:
 					!dipejet &&
 					tahC
 				){
-					if(!oini){
+					if(!oini && hov0ini.children.length){
 						let arr_asli = [tahC]//yang disalin
 						let arr_baru = []//node baru
 						//let bubar = 222
@@ -468,6 +480,8 @@ rencana:
 								pilihnode(nodebaru)
 							}
 						}
+					}else{
+						lih('node tujuan sedang sembunyi tidak bisa copy node')
 					}
 					tahC = null
 				}
@@ -480,12 +494,7 @@ rencana:
 				){
 					let chi = nodedipilih.parent.children
 					chi.splice(chi.indexOf(nodedipilih),1,)
-					nodedipilih = null
-					cla('judul')[0].value = ''
-					//cla('awal')[0].value = 
-					//cla('akhir')[0].value = ''
-					cla('dataawal')[0].value = 
-					cla('dataakhir')[0].value = 'Harap pilih node untuk mengisi data'
+					tidakdipilih()
 				}
 				//
 			break
@@ -707,6 +716,15 @@ rencana:
 						cx.fillText('Tekan esc = kembali'	,x	,(y++)*22	,)
 						y++
 						cx.fillText('(petunjuk blum lengkap)'	,x	,(y++)*22	,)
+						cx.font = '33px Consolas'
+						cx.fillStyle = ru.rgba(
+							Math.random()*200+55	,
+							Math.random()*200+55	,
+							Math.random()*200+55	,
+							1	,
+						)
+						y++
+						cx.fillText('AWAS!! blum ada Undo & Redo'	,x	,(y++)*22	,)
 					}
 				break
 			}
@@ -1128,7 +1146,8 @@ rencana:
 						
 						if(
 							(oini === tahP) ||
-							(oini === tahB)
+							(oini === tahB) ||
+							!oini.children.length
 						){
 							cx.fillStyle = '#ff000099'
 							break
@@ -1260,7 +1279,8 @@ rencana:
 			let mh0 = c[naA-1]?.hoverbox
 			let mh1 = c[naA]?.hoverbox
 			
-			cx.strokeStyle = '#00ffff44'
+			cx.strokeStyle = (nodedipilih === c[naA])?'yellow':'#00ffff44'
+			cx.strokeStyle = (nodedipilih === c[naA-1])?'#00ff00':cx.strokeStyl
 			cx.beginPath()
 			;ml0?
 				cx.moveTo(
@@ -1530,6 +1550,7 @@ rencana:
 	}
 	let gambardipilih = null//<tr>
 	let klikgambar = cur=>{
+		//if(!nodedipilih){return}
 		let cl = cur.classList
 		let punya = cl.contains('gambardipilih')
 		for(let vaA of cla('gambardipilih')){
@@ -1552,6 +1573,7 @@ rencana:
 		}
 	}
 	cla('hapusgambar')[0].addEventListener('click',e=>{
+		lih(gambardipilih)
 		URL.revokeObjectURL(gambardipilih?.firstChild.firstChild.src)
 		gambardipilih?.parentElement.removeChild(gambardipilih)
 		for(let naA in arr_gambar){
@@ -1586,7 +1608,10 @@ rencana:
 			for(let naB in vaA){
 				naB = +naB
 				let vaB = vaA[naB]
-				if(+vaB.id === +id){
+				if(
+					(id !== null) &&
+					(+vaB.id === +id)
+				){
 					pilihnode(vaB)
 					return
 				}
@@ -1608,6 +1633,7 @@ rencana:
 		
 		cla('gambardipilih')[0]?.classList.remove('gambardipilih')
 		o.gambar?.tr.classList.add('gambardipilih')
+		gambardipilih = (o.gambar?.tr)??null
 	}
 	let warnahover
 	addEventListener('beforeunload',e=>{
@@ -1621,6 +1647,16 @@ rencana:
 		cla('UI')[0].classList.remove('hlmexport')
 		cla('UI')[0].classList.remove('hlmsave')
 		cla('UI')[0].classList.add(hlm)
+	}
+	let tidakdipilih = ()=>{
+		nodedipilih = null
+		cla('gambardipilih')[0]?.classList.remove('gambardipilih')
+		cla('warna')[0].value =
+		cla('judul')[0].value = ''
+		//cla('awal')[0].value = 
+		//cla('akhir')[0].value = ''
+		cla('dataawal')[0].value = 
+		cla('dataakhir')[0].value = 'Harap pilih node untuk mengisi data'
 	}
 	
 	requestAnimationFrame(lukis)
