@@ -1,5 +1,7 @@
-# Tandakurung Node
-[tampilan diagram](Tandakurung%20Node%20v0.3.1/kumpulan%20project/previewTN.png)  
+# Tandakurung Node  
+  
+![tampilan diagram](Tandakurung%20Node%20v0.3.1/kumpulan%20project/previewTN.png)  
+  
 Diagram berisi beberapa node yang bisa digeser dan diberi gambar  
   
 Programmer tidak perlu pusing mencari baris code yang ingin diedit.  
