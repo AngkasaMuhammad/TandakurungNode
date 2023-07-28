@@ -1,0 +1,77 @@
+<!DOCTYPE	html>
+<html>
+	<head>
+		<style>
+			html{
+				background:#003333;
+				color:cyan;
+				font-family:Arial;
+			}
+			button{
+				background:#005500;
+				color:#00ff00;
+				border:none;
+				padding:9px;
+			}
+			button:hover{
+				background:#00aa00;
+				color:white;
+			}
+			body{
+				display:flex;
+				flex-direction: column;
+			}
+			
+			.hlm1{
+				color:#00ffaa;
+			}
+			.hlm2{
+				color:yellow;
+				transform: rotate(5.728rad);
+			}
+			.hlm3{
+				color:pink;
+			}
+			
+			.hilang{
+				display:none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="menuatas">
+			<button class="kehlm1">Home</button>
+			<button class="kehlm2">Info</button>
+			<button class="kehlm3">Help</button>
+		</div>
+		<div class="hlm1">
+			<h1>Selamat datang</h1>
+			latihan gantiganti halaman pake <b>add() remove()</b> class
+		</div>
+		<div class="hlm2 hilang">
+			<h3>Ini halaman info</h3>
+			mengCoba css rotate
+		</div>
+		<div class="hlm3 hilang">
+			<h3>Ini halaman help</h3>
+		</div>
+		<script>
+			let cla = nama=>document.getElementsByClassName(nama)
+			let lih = a=>{
+				console.log(a)
+				return a
+			}
+			let pindahhlm = hlm=>{
+				cla('hlm1')[0].classList.add('hilang')
+				cla('hlm2')[0].classList.add('hilang')
+				cla('hlm3')[0].classList.add('hilang')
+			
+				cla(hlm)[0].classList.remove('hilang')
+			}
+			
+			cla('kehlm1')[0].addEventListener('click',e=>pindahhlm('hlm1'))
+			cla('kehlm2')[0].addEventListener('click',e=>pindahhlm('hlm2'))
+			cla('kehlm3')[0].addEventListener('click',e=>pindahhlm('hlm3'))
+		</script>
+	</body>
+</html>
