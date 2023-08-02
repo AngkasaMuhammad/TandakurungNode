@@ -9,9 +9,9 @@ Hasil berupa teks biasa dan bisa dilihat di halaman export. Di dalam halaman exp
 silakan kunjungi [Tandakurung Node v0.3.1](https://angkasamuhammad.github.io/TandakurungNode/Tandakurung%20Node%20v0.3.1/Tandakurung%20Node.html)  
 Silakan [click](https://github.com/AngkasaMuhammad/TandakurungNode/tree/main/Tandakurung%20Node%20v0.3.1/kumpulan%20project) beberapa contoh project berupa file JSON  
   
-1.## Halaman Utama  
-## 1. Halaman Petunjuk  
-## 1. Halaman Simpan Project  
-## 1. Halaman Export  
-## 1. Halaman Edit Node  
-## 1. Halaman Buka Gallery  
+## 1. Halaman Utama  
+## 2. Halaman Petunjuk  
+## 3. Halaman Simpan Project  
+## 4. Halaman Export  
+## 5. Halaman Edit Node  
+## 6. Halaman Buka Gallery  
