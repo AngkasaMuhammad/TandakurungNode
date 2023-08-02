@@ -10,6 +10,9 @@ silakan kunjungi [Tandakurung Node v0.3.1](https://angkasamuhammad.github.io/Tan
 Silakan [click](https://github.com/AngkasaMuhammad/TandakurungNode/tree/main/Tandakurung%20Node%20v0.3.1/kumpulan%20project) beberapa contoh project berupa file JSON  
   
 ### 1. Halaman Utama  
+Grid putih dan sumbu X dan Y sebagai background
+Node berbentuk persegi dengan nama dan border berwarna  
+Menu di bawah kiri
 ### 2. Halaman Petunjuk  
 ### 3. Halaman Simpan Project  
 ### 4. Halaman Export  
