@@ -7,5 +7,5 @@ Tandakurung Node adalah web application untuk visual programming, yaitu mengguna
 Hasil berupa teks biasa dan bisa dilihat di halaman export. Di dalam halaman export, user tidak bisa langsung edit. User harus click teks yang ingin diedit, lalu pindah ke halaman Edit node.  
   
 silakan kunjungi [Tandakurung Node v0.3.1](https://angkasamuhammad.github.io/TandakurungNode/Tandakurung%20Node%20v0.3.1/Tandakurung%20Node.html)  
-[contoh project berupa file JSON](https://github.com/AngkasaMuhammad/TandakurungNode/tree/main/Tandakurung%20Node%20v0.3.1/kumpulan%20project)  
+Silakan [click](https://github.com/AngkasaMuhammad/TandakurungNode/tree/main/Tandakurung%20Node%20v0.3.1/kumpulan%20project) beberapa contoh project berupa file JSON  
   
