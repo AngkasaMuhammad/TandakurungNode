@@ -30,7 +30,7 @@ Teks input "Nama file export" sebagai nama file yang akan diexport
 Button Simpan menyimpan project  
 Button Kembali menuju ke halaman utama  
 Teks berwarna merupakan hasil yang akan diexport, tersusun dari semua node sesuai warnanya   
-Children diberi +1 tab dari jumlah tab parentnya
+Indent children diberi +1 tab dari indent parentnya
 ### 5. Halaman Edit Node  
 ![Edit Node](Tandakurung%20Node%20v0.3.1/img/Halaman%20Edit%20Node.png)  
 Terdapat textarea pembuka (atas) dan penutup (bawah), menampilkan teks dari node yang sedang aktif/dipilih
