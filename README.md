@@ -11,15 +11,23 @@ Silakan [click](https://github.com/AngkasaMuhammad/TandakurungNode/tree/main/Tan
   
 ### 1. Halaman Utama  
 ![Halaman Utama](Tandakurung%20Node%20v0.3.1/img/Halaman%20Utama.png)  
-Grid putih dan sumbu X dan Y sebagai background
+Grid putih dan sumbu X dan Y sebagai background  
 Node berbentuk persegi dengan nama dan border berwarna  
-Menu di bawah kiri
+Menu di bawah kiri  
 ### 2. Halaman Petunjuk  
 ![Halaman Petunjuk](Tandakurung%20Node%20v0.3.1/img/Halaman%20Petunjuk.png)  
 ### 3. Halaman Simpan Project  
 ![Halaman Simpan Project](Tandakurung%20Node%20v0.3.1/img/Halaman%20Simpan%20Project.png)  
+Teks input "Nama file project" sebagai nama file yang akan disimpan  
+Textarea berisi deskripsi project  
+Button Simpan menyimpan project  
+Button Kembali menuju ke halaman utama  
 ### 4. Halaman Export  
 ![Halaman Export](Tandakurung%20Node%20v0.3.1/img/Halaman%20Export.png)  
+Teks input "Nama file export" sebagai nama file yang akan diexport  
+Button Simpan menyimpan project  
+Button Kembali menuju ke halaman utama  
+
 ### 5. Halaman Edit Node  
 ![Edit Node](Tandakurung%20Node%20v0.3.1/img/Halaman%20Edit%20Node.png)  
 ### 6. Halaman Buka Gallery  
