@@ -2,7 +2,7 @@
   
 ![tampilan diagram](Tandakurung%20Node%20v0.3.1/kumpulan%20project/previewTN.png)  
   
-Tandakurung Node adalah web application untuk visual programming, yaitu menggunakan nodes berwarna berisi coding & gambar. Nodes yang saling terhubung (garis) memudahkan prograammer memahami alur code yang dibuat. Nodes menggunakan sistem parent & children, yaitu nodes berisi nodes. Setiap node berisi 2 teks, yaitu pembuka & penutup, seperti html tag.  
+Tandakurung Node adalah web application untuk visual programming, yaitu menggunakan nodes berwarna berisi coding & gambar. Nodes yang saling terhubung (garis) memudahkan prograammer memahami alur code yang dibuat. Nodes menggunakan sistem parent & children, yaitu nodes berisi nodes. Setiap node berisi 2 teks, yaitu pembuka & penutup, mirip html/xml tag.  
   
 Hasil berupa teks biasa dan bisa dilihat di halaman export. Di dalam halaman export, user tidak bisa langsung edit. User harus click teks yang ingin diedit, lalu pindah ke halaman Edit node.  
   
