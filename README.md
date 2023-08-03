@@ -14,8 +14,8 @@ Silakan [click](https://github.com/AngkasaMuhammad/TandakurungNode/tree/main/Tan
 Grid putih dan sumbu X dan Y sebagai background  
 Node berbentuk persegi dengan nama dan border berwarna  
 Menu di bawah kiri  
-Teks input "Judul" sebagai nama node yang tampil di atas node yang sedang aktif/dipilih
-Teks input "Warna" sebagai warna border node yang sedang aktif/dipilih
+Teks input "Judul" sebagai nama node yang tampil di atas node yang sedang aktif/dipilih  
+Teks input "Warna" sebagai warna border node yang sedang aktif/dipilih  
 ### 2. Halaman Petunjuk  
 ![Halaman Petunjuk](Tandakurung%20Node%20v0.3.1/img/Halaman%20Petunjuk.png)  
 ### 3. Halaman Simpan Project  
@@ -29,13 +29,13 @@ Button Kembali menuju ke halaman utama
 Teks input "Nama file export" sebagai nama file yang akan diexport  
 Button Simpan menyimpan project  
 Button Kembali menuju ke halaman utama  
-Teks berwarna merupakan hasil yang akan diexport, tersusun dari semua node sesuai warnanya   
-Indent children diberi +1 tab dari indent parentnya
+Teks berwarna merupakan hasil yang akan diexport, tersusun dari semua node sesuai warnanya  
+Indent children diberi +1 tab dari indent parentnya  
 ### 5. Halaman Edit Node  
 ![Edit Node](Tandakurung%20Node%20v0.3.1/img/Halaman%20Edit%20Node.png)  
-Terdapat textarea pembuka (atas) dan penutup (bawah), menampilkan teks dari node yang sedang aktif/dipilih
+Terdapat textarea pembuka (atas) dan penutup (bawah), menampilkan teks dari node yang sedang aktif/dipilih  
 ### 6. Halaman Buka Gallery  
 ![Buka Gallery](Tandakurung%20Node%20v0.3.1/img/Halaman%20Buka%20Gallery.png)  
-Tabel gambar & nama file gambar
-Button "+" import gambar ke gallery
-Button "-" menghapus gambar dari baris yang sedang aktif/dipilih (hijau)
+Tabel gambar & nama file gambar  
+Button "+" import gambar ke gallery  
+Button "-" menghapus gambar dari baris yang sedang aktif/dipilih (hijau)  
