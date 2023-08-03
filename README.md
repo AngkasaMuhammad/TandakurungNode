@@ -13,7 +13,13 @@ Silakan [click](https://github.com/AngkasaMuhammad/TandakurungNode/tree/main/Tan
 ![Halaman Utama](Tandakurung%20Node%20v0.3.1/img/Halaman%20Utama.png)  
 Grid putih dan sumbu X dan Y sebagai background  
 Node berbentuk persegi dengan nama dan border berwarna  
-Menu di bawah kiri  
+Menu di bawah kiri:  
+- Buka gallery --> menuju Halaman Gallery
+- Edit node --> menuju Halaman Edit Node
+- Export --> menuju Halaman Export
+- Simpan Project --> menuju Halaman Simpan Project
+- Buka --> buka file project (JSON)
+- Petunjuk --> membuka Halaman Petunjuk (tanpa klik)
 Teks input "Judul" sebagai nama node yang tampil di atas node yang sedang aktif/dipilih  
 Teks input "Warna" sebagai warna border node yang sedang aktif/dipilih  
 ### 2. Halaman Petunjuk  
